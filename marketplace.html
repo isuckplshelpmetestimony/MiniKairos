@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Marketplace - MiniKairos</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="utils/localTools.js"></script>
 </head>
 <body class="bg-gray-100">
     <nav class="bg-white shadow-md">
@@ -17,6 +18,10 @@
                         </a>
                     </div>
                 </div>
+                <div class="flex items-center space-x-3 ">
+                    <a href="marketplace.html" class="py-2 px-2 font-medium text-gray-500 rounded hover:bg-blue-500 hover:text-white transition duration-300">Marketplace</a>
+                    <a href="submit.html" class="py-2 px-2 font-medium text-white bg-green-500 rounded hover:bg-green-600 transition duration-300">Submit a Tool</a>
+                </div>
             </div>
         </div>
     </nav>
@@ -28,27 +33,27 @@
     </div>
 
     <script>
-        const tools = [
+        const staticTools = [ // Renamed to staticTools for clarity
             {
-                name: "Cool Tool Alpha",
+                title: "Cool Tool Alpha", // Changed name to title
                 description: "An amazing tool that does cool stuff. Highly recommended for productivity.",
                 author: "Dev Team A",
                 url: "https://example.com/tool-alpha"
             },
             {
-                name: "Beta Utility Suite",
+                title: "Beta Utility Suite", // Changed name to title
                 description: "A comprehensive suite of utilities for everyday tasks. Simplifies your workflow.",
                 author: "Student Coders Inc.",
                 url: "https://example.com/beta-suite"
             },
             {
-                name: "Gamma Project Helper",
+                title: "Gamma Project Helper", // Changed name to title
                 description: "Helps manage your projects efficiently with intuitive features and a clean interface.",
                 author: "Solo Developer X",
                 url: "https://example.com/gamma-helper"
             },
             {
-                name: "Delta Design Studio",
+                title: "Delta Design Studio", // Changed name to title
                 description: "A powerful design tool for creating stunning visuals and mockups.",
                 author: "Creative Students Collective",
                 url: "https://example.com/delta-studio"
@@ -56,14 +61,16 @@
         ];
 
         const toolsListContainer = document.getElementById('tools-list');
+        const localUserTools = getLocalTools(); // Assumes getLocalTools is defined from localTools.js
+        const allTools = [...staticTools, ...localUserTools];
 
         // Reusable ToolCard component function
         function createToolCard(tool) {
-            // Props: title (maps to tool.name), description, author, url
+            // Props: title, description, author, url
             // Tailwind styles: padding, border, hover effects
             return `
                 <div class="bg-white rounded-lg shadow-lg overflow-hidden border border-gray-200 hover:shadow-xl transition-shadow duration-300 ease-in-out p-6">
-                    <h2 class="text-2xl font-bold text-gray-800 mb-2">${tool.name}</h2>
+                    <h2 class="text-2xl font-bold text-gray-800 mb-2">${tool.title}</h2> // Changed tool.name to tool.title
                     <p class="text-gray-600 text-sm mb-1">By: ${tool.author}</p>
                     <p class="text-gray-700 mb-4">${tool.description}</p>
                     <a href="${tool.url}" target="_blank" class="inline-block bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded transition duration-300 ease-in-out">
@@ -73,10 +80,14 @@
             `;
         }
 
-        tools.forEach(tool => {
-            const toolCardHTML = createToolCard(tool); // Pass the whole tool object
-            toolsListContainer.innerHTML += toolCardHTML;
-        });
+        if (allTools.length === 0) {
+            toolsListContainer.innerHTML = '<p class="text-center text-gray-500 col-span-full">No tools submitted yet. Be the first!</p>';
+        } else {
+            allTools.forEach(tool => {
+                const toolCardHTML = createToolCard(tool);
+                toolsListContainer.innerHTML += toolCardHTML;
+            });
+        }
     </script>
 </body>
 </html>

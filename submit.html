@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Submit Tool - MiniKairos</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100">
+    <nav class="bg-white shadow-md">
+        <div class="max-w-6xl mx-auto px-4">
+            <div class="flex justify-between">
+                <div class="flex space-x-7">
+                    <div>
+                        <a href="/" class="flex items-center py-4 px-2">
+                            <span class="font-semibold text-gray-500 text-lg">MiniKairos</span>
+                        </a>
+                    </div>
+                </div>
+                <div class="flex items-center space-x-3 ">
+                    <a href="marketplace.html" class="py-2 px-2 font-medium text-gray-500 rounded hover:bg-blue-500 hover:text-white transition duration-300">Marketplace</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+    <div class="min-h-screen flex flex-col items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+        <div class="max-w-md w-full space-y-8 bg-white p-10 rounded-xl shadow-lg">
+            <div>
+                <h2 class="mt-6 text-center text-3xl font-extrabold text-gray-900">
+                    Submit a New Tool
+                </h2>
+            </div>
+            <form id="submitToolForm" class="mt-8 space-y-6">
+                <div>
+                    <label for="toolTitle" class="block text-sm font-medium text-gray-700">Tool Title</label>
+                    <input id="toolTitle" name="toolTitle" type="text" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                    <p id="toolTitleError" class="text-red-500 text-xs mt-1 hidden">Tool Title is required.</p>
+                </div>
+                <div>
+                    <label for="description" class="block text-sm font-medium text-gray-700">Description</label>
+                    <textarea id="description" name="description" rows="3" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"></textarea>
+                    <p id="descriptionError" class="text-red-500 text-xs mt-1 hidden">Description is required.</p>
+                </div>
+                <div>
+                    <label for="authorName" class="block text-sm font-medium text-gray-700">Author Name</label>
+                    <input id="authorName" name="authorName" type="text" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                    <p id="authorNameError" class="text-red-500 text-xs mt-1 hidden">Author Name is required.</p>
+                </div>
+                <div>
+                    <label for="externalUrl" class="block text-sm font-medium text-gray-700">External URL</label>
+                    <input id="externalUrl" name="externalUrl" type="url" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                    <p id="externalUrlError" class="text-red-500 text-xs mt-1 hidden">Please enter a valid URL (e.g., http://example.com).</p>
+                </div>
+                <div>
+                    <button type="submit" class="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
+                        Submit Tool
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <script>
+        document.getElementById('submitToolForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            let isValid = true;
+
+            const title = document.getElementById('toolTitle');
+            const description = document.getElementById('description');
+            const author = document.getElementById('authorName');
+            const url = document.getElementById('externalUrl');
+
+            const titleError = document.getElementById('toolTitleError');
+            const descriptionError = document.getElementById('descriptionError');
+            const authorError = document.getElementById('authorNameError');
+            const urlError = document.getElementById('externalUrlError');
+
+            // Reset errors
+            titleError.classList.add('hidden');
+            descriptionError.classList.add('hidden');
+            authorError.classList.add('hidden');
+            urlError.classList.add('hidden');
+
+            if (!title.value.trim()) {
+                titleError.classList.remove('hidden');
+                isValid = false;
+            }
+            if (!description.value.trim()) {
+                descriptionError.classList.remove('hidden');
+                isValid = false;
+            }
+            if (!author.value.trim()) {
+                authorError.classList.remove('hidden');
+                isValid = false;
+            }
+            if (!url.value.trim()) {
+                urlError.textContent = 'External URL is required.';
+                urlError.classList.remove('hidden');
+                isValid = false;
+            } else if (!url.value.startsWith('http://') && !url.value.startsWith('https://')) {
+                urlError.textContent = 'Please enter a valid URL (e.g., http://example.com or https://example.com).';
+                urlError.classList.remove('hidden');
+                isValid = false;
+            }
+
+            if (!isValid) {
+                return;
+            }
+
+            const newTool = {
+                title: title.value,
+                description: description.value,
+                author: author.value,
+                url: url.value
+            };
+
+            let tools = JSON.parse(localStorage.getItem('userSubmittedTools')) || [];
+            tools.push(newTool);
+            localStorage.setItem('userSubmittedTools', JSON.stringify(tools));
+
+            window.location.href = 'marketplace.html';
+        });
+    </script>
+</body>
+</html>
